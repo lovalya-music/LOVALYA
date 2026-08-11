@@ -975,3 +975,89 @@ textarea { resize: vertical; min-height: 72px; }
 .artists-table td.num { text-align: right; }
 .artists-table tbody tr:last-child td { border-bottom: none; }
 .artists-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 7%, transparent); }
+
+/* =====================================================================
+   v3 — chrome texture buttons, file input, calmer glow, spotify, sort
+   ===================================================================== */
+
+/* Buttons: real chrome texture with a viewport-fixed reflection that
+   shifts as the button moves/scrolls (live environment reflection). */
+.btn-primary {
+  color: #1a1c26;
+  text-shadow: none;
+  border: 1px solid #7a8098;
+  background-color: #cfd4e0;
+  background-image:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(20, 22, 34, 0.10)),
+    url(/chrome.jpg);
+  background-repeat: no-repeat, no-repeat;
+  background-size: auto, cover;
+  background-position: center, center;
+  background-attachment: scroll, fixed;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.22),
+    0 2px 8px rgba(0, 0, 0, 0.4);
+}
+.btn-primary:hover {
+  border-color: var(--accent);
+  background-image:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.52), rgba(20, 22, 34, 0.04)),
+    url(/chrome.jpg);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    0 0 20px rgba(109, 140, 255, 0.5),
+    0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Unified file picker button (was browser-default ugly white) */
+input[type="file"] {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--muted);
+  font-size: 13px;
+  font-family: var(--sans);
+}
+input[type="file"]::file-selector-button {
+  margin-right: 12px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+input[type="file"]::file-selector-button:hover {
+  border-color: var(--accent-dim);
+  color: #fff;
+}
+
+/* Cursor glow: even smaller, subtler, slow radius pulse */
+.cursor-glow { width: 280px; height: 280px; }
+.cursor-glow i {
+  background: radial-gradient(circle,
+    rgba(120, 150, 255, 0.09) 0%,
+    rgba(160, 120, 255, 0.055) 40%,
+    transparent 70%);
+  animation: glow-pulse 6s ease-in-out infinite;
+}
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(0.8); }
+  50%      { opacity: 1; transform: scale(1.15); }
+}
+
+/* Spotify embed */
+.spotify-embed { border: none; border-radius: 12px; margin-top: 4px; }
+
+/* Sortable table headers */
+.artists-table th.sortable { cursor: pointer; user-select: none; }
+.artists-table th.sortable:hover { color: var(--text); }
+
+/* Intro: a touch slower / cleaner */
+.intro-logo { animation: intro-logo 1.2s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.intro-word { animation: intro-word 1.0s cubic-bezier(0.16, 1, 0.3, 1) 1.15s both; }

@@ -36,7 +36,7 @@ function CursorGlow() {
     const apply = () => {
       raf = 0;
       const el = ref.current;
-      if (el) el.style.transform = `translate3d(${x - 180}px, ${y - 180}px, 0)`;
+      if (el) el.style.transform = `translate3d(${x - 140}px, ${y - 140}px, 0)`;
     };
     const move = (e) => {
       x = e.clientX;
@@ -79,8 +79,8 @@ function DiscordCorner() {
 function Intro({ onDone }) {
   const [leaving, setLeaving] = useState(false);
   useEffect(() => {
-    const t1 = setTimeout(() => setLeaving(true), 2050);
-    const t2 = setTimeout(onDone, 2550);
+    const t1 = setTimeout(() => setLeaving(true), 2600);
+    const t2 = setTimeout(onDone, 3150);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
@@ -106,6 +106,8 @@ export default function App() {
       return true;
     }
   });
+  const location = useLocation();
+  const introKeyRef = useRef(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setSession(data.session));
@@ -115,6 +117,18 @@ export default function App() {
     });
     return () => sub.subscription.unsubscribe();
   }, []);
+
+  // Replay the intro when entering the app from the landing (state.intro).
+  useEffect(() => {
+    if (
+      location.pathname === "/app" &&
+      location.state?.intro &&
+      location.key !== introKeyRef.current
+    ) {
+      introKeyRef.current = location.key;
+      setShowIntro(true);
+    }
+  }, [location]);
 
   function endIntro() {
     try {

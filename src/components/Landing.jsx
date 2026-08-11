@@ -13,7 +13,7 @@ export default function Landing() {
         >
           <Brand logoSize={40} fontSize={22} />
         </button>
-        <button className="btn btn-primary" onClick={() => navigate("/app")}>
+        <button className="btn btn-primary" onClick={() => navigate("/app", { state: { intro: true } })}>
           Launch app
         </button>
       </header>
@@ -29,12 +29,12 @@ export default function Landing() {
             find collaborators, share sounds, and build your name.
           </p>
           <div className="row" style={{ gap: 10, marginTop: 8 }}>
-            <button className="btn btn-primary" onClick={() => navigate("/app")}>
+            <button className="btn btn-primary" onClick={() => navigate("/app", { state: { intro: true } })}>
               Enter the board
             </button>
             <button
               className="btn"
-              onClick={() => navigate("/app", { state: { view: "artists" } })}
+              onClick={() => navigate("/app", { state: { intro: true, view: "artists" } })}
             >
               Browse artists
             </button>
@@ -79,7 +79,7 @@ export default function Landing() {
 
       <footer className="landing-foot muted">
         <span>© LOVALYA</span>
-        <button className="brand-btn" onClick={() => navigate("/app")}>
+        <button className="brand-btn" onClick={() => navigate("/app", { state: { intro: true } })}>
           <span className="glow-name" style={{ color: "#ffffff" }}>Enter →</span>
         </button>
       </footer>

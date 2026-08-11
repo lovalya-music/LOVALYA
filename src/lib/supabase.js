@@ -20,6 +20,7 @@ export const ROLES = [
   "Mastering",
   "Vocal-Chops",
   "Sound Design",
+  "Designer",
   "Music Prod",
 ];
 

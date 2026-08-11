@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { formatDateTime } from "../lib/format";
 import { badgeFor } from "../lib/badges";
+import { spotifyEmbedUrl } from "../lib/spotify";
 import Avatar from "./Avatar";
 import HiddenPosts from "./HiddenPosts";
 import PostView from "./PostView";
@@ -13,7 +14,13 @@ import Reveal from "./Reveal";
 export default function PublicProfile({ userId: propUserId, isSelf, hasSession, onEdit }) {
   const params = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const userId = propUserId || params.userId;
+
+  function goBack() {
+    if (location.state?.fromView) navigate("/app", { state: { view: location.state.fromView } });
+    else navigate(-1);
+  }
 
   const [p, setP] = useState(null);
   const [collabs, setCollabs] = useState([]);
@@ -108,7 +115,7 @@ export default function PublicProfile({ userId: propUserId, isSelf, hasSession, 
   return (
     <div className="grid" style={{ gap: 18 }}>
       {!isSelf && (
-        <button className="tab" style={{ alignSelf: "flex-start" }} onClick={() => navigate(-1)}>
+        <button className="tab" style={{ alignSelf: "flex-start" }} onClick={goBack}>
           ← Back
         </button>
       )}
@@ -171,6 +178,19 @@ export default function PublicProfile({ userId: propUserId, isSelf, hasSession, 
               </a>
             ))}
           </div>
+        )}
+
+        {spotifyEmbedUrl(p.spotify_url) && (
+          <iframe
+            className="spotify-embed"
+            src={spotifyEmbedUrl(p.spotify_url)}
+            width="100%"
+            height="352"
+            frameBorder="0"
+            loading="lazy"
+            title="Spotify"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          />
         )}
       </div>
 
