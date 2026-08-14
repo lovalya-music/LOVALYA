@@ -15,22 +15,34 @@ export default function ArtistsTable() {
       const { data: profiles } = await supabase
         .from("profiles")
         .select("id, username, avatar_url, spotify_url, total_streams");
+      const { data: posts } = await supabase
+        .from("collab_posts")
+        .select("author_id");
       const { data: collabs } = await supabase
         .from("collabs")
         .select("poster_id, joiner_id");
 
-      const posted = {};
-      const joined = {};
-      (collabs || []).forEach((c) => {
-        posted[c.poster_id] = (posted[c.poster_id] || 0) + 1;
-        joined[c.joiner_id] = (joined[c.joiner_id] || 0) + 1;
+      // Posted = number of collab posts a user created.
+      const postsMade = {};
+      (posts || []).forEach((p) => {
+        postsMade[p.author_id] = (postsMade[p.author_id] || 0) + 1;
       });
 
-      const built = (profiles || []).map((p) => {
-        const pc = posted[p.id] || 0;
-        const jc = joined[p.id] || 0;
-        return { ...p, posted: pc, joined: jc, total: pc + jc };
+      // Joined = confirmed collabs a user joined; confirmed total drives the badge.
+      const joined = {};
+      const confirmed = {};
+      (collabs || []).forEach((c) => {
+        joined[c.joiner_id] = (joined[c.joiner_id] || 0) + 1;
+        confirmed[c.poster_id] = (confirmed[c.poster_id] || 0) + 1;
+        confirmed[c.joiner_id] = (confirmed[c.joiner_id] || 0) + 1;
       });
+
+      const built = (profiles || []).map((p) => ({
+        ...p,
+        posted: postsMade[p.id] || 0, // posts created
+        joined: joined[p.id] || 0, // confirmed collabs joined
+        total: confirmed[p.id] || 0, // confirmed collabs (badge)
+      }));
       setRows(built);
       setLoading(false);
     })();
